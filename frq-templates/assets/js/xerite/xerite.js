@@ -51,8 +51,8 @@ const colors = {
             }
         ]
     },
-    3: {
-        id: 3,
+    4: {
+        id: 4,
         bcgColor: "#D2DF8A",
         title: "Qazax-Tovuz",
         male: 2200,
@@ -92,8 +92,8 @@ const colors = {
             }
         ]
     },
-    4: {
-        id: 4,
+    6: {
+        id: 6,
         bcgColor: "#EFDB85",
         title: "Şərqi Zəngəzur",
         male: 2200,
@@ -133,8 +133,8 @@ const colors = {
             }
         ]
     },
-    5: {
-        id: 5,
+    8: {
+        id: 8,
         bcgColor: "#F19CC2",
         title: "Qarabağ",
         male: 0,
@@ -174,8 +174,8 @@ const colors = {
             }
         ]
     },
-    6: {
-        id: 6,
+    10: {
+        id: 10,
         bcgColor: "#F8CCDD",
         title: "Gəncə-Daşkən",
         male: 0,
@@ -215,8 +215,8 @@ const colors = {
             }
         ]
     },
-    7: {
-        id: 7,
+    12: {
+        id: 12,
         bcgColor: "#F19CC2",
         title: "Şəki-Zaqatala",
         male: 0,
@@ -256,8 +256,8 @@ const colors = {
             }
         ]
     },
-    8: {
-        id: 8,
+    14: {
+        id: 14,
         bcgColor: "#B7D172",
         title: "Mərkəzi Aran",
         male: 0,
@@ -297,8 +297,8 @@ const colors = {
             }
         ]
     },
-    9: {
-        id: 9,
+    16: {
+        id: 16,
         bcgColor: "#F2BF5F",
         title: "Mil-Muğan",
         male: 0,
@@ -338,8 +338,8 @@ const colors = {
             }
         ]
     },
-    10: {
-        id: 10,
+    18: {
+        id: 18,
         bcgColor: "#9BA8D5",
         title: "Şirvan-Salyan",
         male: 0,
@@ -379,8 +379,8 @@ const colors = {
             }
         ]
     },
-    12: {
-        id: 12,
+    22: {
+        id: 22,
         bcgColor: "#0574BA",
         title: "Baku",
         male: 2200,
@@ -420,8 +420,8 @@ const colors = {
             }
         ]
     },
-    13: {
-        id: 13,
+    20: {
+        id: 20,
         bcgColor: "#F19CC2",
         title: "Abşeron-Xızı",
         male: 0,
@@ -461,8 +461,8 @@ const colors = {
             }
         ]
     },
-    14: {
-        id: 14,
+    26: {
+        id: 26,
         bcgColor: "#DDE38A",
         title: "Dağlıq-Şırvan",
         male: 0,
@@ -502,8 +502,8 @@ const colors = {
             }
         ]
     },
-    15: {
-        id: 15,
+    28: {
+        id: 28,
         bcgColor: "#F2D974",
         title: "Quba-Xaçmaz",
         male: 0,
@@ -543,8 +543,8 @@ const colors = {
             }
         ]
     },
-    17: {
-        id: 17,
+    30: {
+        id: 30,
         bcgColor: "#DBE390",
         title: "Naxçıvan",
         male: 0,
@@ -602,9 +602,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             clickableAreas.forEach(area => {
                 area.addEventListener('mouseover', (event) => {
-
+                    
                     event.preventDefault();
-                    const id = area.getAttribute('data-id');
+                    let id = area.getAttribute('data-id');
+                    id = parseInt(id, 10); 
+
+                    if (id % 2 !== 0) {
+                        id++; 
+                    }
+
                     const elements = svgDoc.querySelectorAll(`.clickable-area[data-id='${id}']`);
 
                     if (elements && id) {
@@ -645,46 +651,54 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
+    });
 
+    function highlightElement(elements, id) {
+        const shadowColor = '#0005185';
+        elements.forEach(item => {
+            item.style.fill = colors[id]?.bcgColor;
+            item.style.filter = `drop-shadow(0 0 10px ${shadowColor})`;
+            item.style.transform = 'translate(5px, -3px)';
+        });
+    }
 
-        function highlightElement(elements, id) {
-            const shadowColor = '#0005185';
-            elements.forEach(item => {
-                item.style.fill = colors[id]?.bcgColor;
-                item.style.filter = `drop-shadow(0 0 10px ${shadowColor})`;
-                item.style.transform = 'translate(4px, -4px)';
-            });
-        }
+    function resetElement(elements) {
+        elements.forEach(item => {
+            item.style.fill = '#E9F5FF';
+            item.style.filter = 'none';
+            item.style.transform = 'none';
+        });
+        hideInfoBox();
+    }
 
-        function resetElement(elements) {
-            elements.forEach(item => {
-                item.style.fill = '#E9F5FF';
-                item.style.filter = 'none';
-                item.style.transform = 'none';
-            });
-            hideInfoBox();
-        }
+    function showInfoBox(elements, id) {
+       infoBox.style.display = 'block';
+    const rect = elements[0].getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
 
-        function showInfoBox(elements, id) {
-            infoBox.style.display = 'block';
-            const rect = elements[0].getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
+    let top = rect.top  - infoBox.offsetHeight / 2;  
+    let left = rect.left + window.scrollX + rect.width / 2 - infoBox.offsetWidth / 2; 
 
-            let top = rect.top + window.scrollY - 220;
-            let left = rect.left + window.scrollX + 20;
+    if (left + infoBox.offsetWidth > viewportWidth) {
+        left = viewportWidth - infoBox.offsetWidth - 20;
+    }
+    if (left < 0) {
+        left = 20;
+    }
+    if (top + infoBox.offsetHeight > viewportHeight) {
+        top = viewportHeight - infoBox.offsetHeight - 20;
+    }
+    if (top < 0) {
+        top = 20;
+    }
 
-            if (left + infoBox.offsetWidth > viewportWidth) {
-                left = viewportWidth - infoBox.offsetWidth - 20;
-            }
-            if (top + infoBox.offsetHeight > viewportHeight) {
-                top = viewportHeight - infoBox.offsetHeight - 20;
-            }
-
-            infoBox.style.top = `${top}px`;
-            infoBox.style.left = `${left}px`;
-
-            infoBox.innerHTML = `
+    infoBox.style.top = `${top}px`;
+    infoBox.style.left = `${left}px`;
+    
+    
+        
+        infoBox.innerHTML = `
             <h5>${colors[id]?.title}</h5>
             <div class="info-text">
                 Kişi:
@@ -716,16 +730,16 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <button class="modal-more-btn" onclick="openDetailModal(${colors[id].id})">Ətraflı</button>
         `;
-        }
+    }
 
-        function hideInfoBox() {
-            infoBox.style.display = 'none';
-        }
+    function hideInfoBox() {
+        infoBox.style.display = 'none';
+    }
 
-        window.openDetailModal = function (ID) {
-            hideInfoBox();
+    window.openDetailModal = function (ID) {
+        hideInfoBox();
 
-            detailsContent.innerHTML = `
+        detailsContent.innerHTML = `
         <div class="details-content-top">
       <div class="details-content-article">
           <h2>${colors[ID].title} iqtisadi rayonu</h2>
@@ -778,7 +792,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
   <div class="map-details-statistic-main-bycity">
  ${colors[ID].cities.map(item => {
-                return `
+            return `
       <div class="map-details-statistic-each-bycity">
           <span>${item.title.toUpperCase()}</span>
           <div>
@@ -830,20 +844,19 @@ document.addEventListener('DOMContentLoaded', () => {
        </div>
           </div>
   </div>`
-            }).join('')}      </div>
+        }).join('')}      </div>
 
   `
-            detailsOverlay.style.display = 'flex';
-        }
+        detailsOverlay.style.display = 'flex';
+    }
 
-        detailsOverlay.addEventListener('click', (event) => {
-            if (event.target === detailsOverlay) {
-                detailsOverlay.style.display = 'none';
-            }
-        });
-
-        document.querySelector(".close-details-map").addEventListener("click", () => {
+    detailsOverlay.addEventListener('click', (event) => {
+        if (event.target === detailsOverlay) {
             detailsOverlay.style.display = 'none';
-        });
+        }
+    });
+
+    document.querySelector(".close-details-map").addEventListener("click", () => {
+        detailsOverlay.style.display = 'none';
     });
 });
