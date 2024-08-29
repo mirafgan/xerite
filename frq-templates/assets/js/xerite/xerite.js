@@ -737,13 +737,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentHighlightedElement = null;
 
     const svgDoc = objectElement.contentDocument;
-    console.log(svgDoc);
     // objectElement.addEventListener('load', () => {
     if (svgDoc) {
         const clickableAreas = svgDoc.querySelectorAll('.clickable-area');
 
         clickableAreas.forEach(area => {
-
             if (window.innerWidth > 992) {
                 area.addEventListener('mousemove', (event) => {
                     event.preventDefault();
