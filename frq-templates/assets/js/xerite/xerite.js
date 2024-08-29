@@ -739,80 +739,65 @@ document.addEventListener('DOMContentLoaded', () => {
     const svgDoc = objectElement.contentDocument;
     console.log(svgDoc);
     // objectElement.addEventListener('load', () => {
-        if (svgDoc) {
-            const clickableAreas = svgDoc.querySelectorAll('.clickable-area');
+    if (svgDoc) {
+        const clickableAreas = svgDoc.querySelectorAll('.clickable-area');
 
-            clickableAreas.forEach(area => {
-                
-                if (window.innerWidth > 992) {
-                    area.addEventListener('mousemove', (event) => {
-                        event.preventDefault();
-                        let id = area.getAttribute('data-id');
-                        id = parseInt(id, 10);
+        clickableAreas.forEach(area => {
 
-                        if (id % 2 !== 0) {
-                            id++;
-                        }
+            if (window.innerWidth > 992) {
+                area.addEventListener('mousemove', (event) => {
+                    event.preventDefault();
+                    let id = area.getAttribute('data-id');
+                    id = parseInt(id, 10);
 
-                        const elements = svgDoc.querySelectorAll(`.clickable-area[data-id='${id}']`);
+                    if (id % 2 !== 0) {
+                        id++;
+                    }
 
-                        if (elements && id) {
-                            if (currentHighlightedElement && currentHighlightedElement !== elements) {
-                                resetElement(currentHighlightedElement);
-                            }
+                    const elements = svgDoc.querySelectorAll(`.clickable-area[data-id='${id}']`);
 
-                            highlightElement(elements, id);
-
-                            currentHighlightedElement = elements;
-
-                            showInfoBox(elements, id, event);
-                        }
-                    });
-                }
-                else {
-                    area.addEventListener('click', (event) => {
-                        event.preventDefault();
-                        let id = area.getAttribute('data-id');
-                        id = parseInt(id, 10);
-
-                        if (id % 2 !== 0) {
-                            id++;
-                        }
-
-                        const elements = svgDoc.querySelectorAll(`.clickable-area[data-id='${id}']`);
-
-                        if (elements && id) {
-                            if (currentHighlightedElement && currentHighlightedElement !== elements) {
-                                resetElement(currentHighlightedElement);
-                            }
-
-                            highlightElement(elements, id);
-
-                            currentHighlightedElement = elements;
-
-                            showInfoBox(elements, id, event);
-                        }
-                    })
-
-                }
-
-                area.addEventListener('mouseout', (event) => {
-                    if (!infoBox.matches(':hover')) {
-                        hideInfoBox();
-                        if (currentHighlightedElement) {
+                    if (elements && id) {
+                        if (currentHighlightedElement && currentHighlightedElement !== elements) {
                             resetElement(currentHighlightedElement);
-                            currentHighlightedElement = null;
                         }
+
+                        highlightElement(elements, id);
+
+                        currentHighlightedElement = elements;
+
+                        showInfoBox(elements, id, event);
                     }
                 });
-            });
+            }
+            else {
+                area.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    let id = area.getAttribute('data-id');
+                    id = parseInt(id, 10);
 
-            infoBox.addEventListener('mouseover', () => {
-                infoBox.style.display = 'block';
-            });
+                    if (id % 2 !== 0) {
+                        id++;
+                    }
 
-            infoBox.addEventListener('mouseout', () => {
-                if (!detailsOverlay.matches(':hover') && !infoBox.matches(':hover')) {
+                    const elements = svgDoc.querySelectorAll(`.clickable-area[data-id='${id}']`);
+
+                    if (elements && id) {
+                        if (currentHighlightedElement && currentHighlightedElement !== elements) {
+                            resetElement(currentHighlightedElement);
+                        }
+
+                        highlightElement(elements, id);
+
+                        currentHighlightedElement = elements;
+
+                        showInfoBox(elements, id, event);
+                    }
+                })
+
+            }
+
+            area.addEventListener('mouseout', (event) => {
+                if (!infoBox.matches(':hover')) {
                     hideInfoBox();
                     if (currentHighlightedElement) {
                         resetElement(currentHighlightedElement);
@@ -820,7 +805,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
-        }
+        });
+
+        infoBox.addEventListener('mouseover', () => {
+            infoBox.style.display = 'block';
+        });
+
+        infoBox.addEventListener('mouseout', () => {
+            if (!detailsOverlay.matches(':hover') && !infoBox.matches(':hover')) {
+                hideInfoBox();
+                if (currentHighlightedElement) {
+                    resetElement(currentHighlightedElement);
+                    currentHighlightedElement = null;
+                }
+            }
+        });
+    }
     // });
 
     function highlightElement(elements, id) {
@@ -852,23 +852,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const rect = elements[0].getBoundingClientRect();
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
-    
+
         let top = rect.top - infoBox.offsetHeight / 2;
         let left = rect.left + window.scrollX + rect.width / 2 - infoBox.offsetWidth / 2;
-    
+
         if (left + infoBox.offsetWidth > viewportWidth) {
-            left = viewportWidth - infoBox.offsetWidth - 20; 
+            left = viewportWidth - infoBox.offsetWidth - 20;
         }
         if (left < 0) {
-            left = 20; 
+            left = 20;
         }
         if (top + infoBox.offsetHeight > viewportHeight) {
-            top = viewportHeight - infoBox.offsetHeight - 20; 
+            top = viewportHeight - infoBox.offsetHeight - 20;
         }
         if (top < 0) {
-            top = 20; 
+            top = 20;
         }
-    
+
         if (window.innerWidth > 1800) {
             top = event.clientY - 250;
             left = event.clientX - 150;
@@ -884,12 +884,12 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (window.innerWidth > 1000) {
             top = event.clientY - 250;
             left = event.clientX - 100;
-        } 
+        }
         else if (window.innerWidth > 480) {
             top = event.clientY - 260;
             left = event.clientX - 100;
         }
-       
+
         else if (window.innerWidth > 400) {
             top = event.clientY - 160;
             left = event.clientX - 100;
@@ -914,15 +914,15 @@ document.addEventListener('DOMContentLoaded', () => {
             top = event.clientY - 120;
             left = event.clientX - 40;
         }
-    
+
         if (left + infoBox.offsetWidth > viewportWidth) {
             left = viewportWidth - infoBox.offsetWidth - 20;
         }
         if (left < 0) {
             left = 20;
         }
-       
-    
+
+
         infoBox.style.top = `${top}px`;
         infoBox.style.left = `${left}px`;
 
@@ -1033,12 +1033,12 @@ document.addEventListener('DOMContentLoaded', () => {
              />
              <!-- Progress Circle -->
              ${getChart(colors[ID]?.sosial_ttk_percent,
-     `<path id="progress-circle" class="progress" 
+            `<path id="progress-circle" class="progress" 
                      d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831
                         a 15.9155 15.9155 0 0 1 0 -31.831"
                      pathLength="100" />`,
-     '#E73B8E'
- )}
+            '#E73B8E'
+        )}
          </svg>            </div> 
             <div class="info-text">
             <p>Sosial TTK:</p>
@@ -1070,12 +1070,12 @@ document.addEventListener('DOMContentLoaded', () => {
           />
           <!-- Progress Circle -->
           ${getChart(colors[ID]?.standart_ttk_percent,
-  `<path id="progress-circle" class="progress" 
+            `<path id="progress-circle" class="progress" 
                   d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831
                      a 15.9155 15.9155 0 0 1 0 -31.831"
                   pathLength="100" />`,
-  '#0059A7'
-)}
+            '#0059A7'
+        )}
       </svg>                
           </div>    
          <div class="info-text">
@@ -1128,12 +1128,12 @@ document.addEventListener('DOMContentLoaded', () => {
         />
         <!-- Progress Circle -->
         ${getChart(item?.sosial_ttk_percent,
-`<path id="progress-circle" class="progress" 
+                `<path id="progress-circle" class="progress" 
                 d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831
                    a 15.9155 15.9155 0 0 1 0 -31.831"
                 pathLength="100" />`,
-'#E73B8E'
-)}
+                '#E73B8E'
+            )}
     </svg>        </div>
  
        <div class="info-text">
@@ -1156,12 +1156,12 @@ document.addEventListener('DOMContentLoaded', () => {
        />
        <!-- Progress Circle -->
        ${getChart(item?.standart_ttk_percent,
-`<path id="progress-circle" class="progress" 
+                `<path id="progress-circle" class="progress" 
                d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831
                   a 15.9155 15.9155 0 0 1 0 -31.831"
                pathLength="100" />`,
-'#0059A7'
-)}
+                '#0059A7'
+            )}
    </svg>            </div>
               <div class="info-text">
               <p>Standart TTK:</p>
@@ -1230,8 +1230,8 @@ function getChart(paramPercent, pathString, color) {
         return '';
     }
 
-    const percent = paramPercent;  
-    const radius = 15.9155; 
+    const percent = paramPercent;
+    const radius = 15.9155;
     const circumference = 2 * Math.PI * radius;
 
     let dashArray, gapArray;
